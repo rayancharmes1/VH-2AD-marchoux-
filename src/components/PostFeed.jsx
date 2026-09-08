@@ -7,7 +7,7 @@ import { cleanupExpiredPosts, isExpired } from '../utils/ttl'
 const REACTION_EMOJIS = ['🙏', '❤️', '🔥', '👏', '🎉']
 
 export default function PostFeed({ basePath }) {
-  const { user } = useAuth()
+  const { user, isAdmin } = useAuth()
   const [posts, setPosts] = useState([])
 
   useEffect(() => {
@@ -31,6 +31,11 @@ export default function PostFeed({ basePath }) {
 
   async function removeReaction(postId, emoji) {
     await remove(ref(db, `${basePath}/${postId}/reactions/${emoji}/${user.uid}`))
+  }
+
+  async function deletePost(postId) {
+    if (!window.confirm('Supprimer définitivement cette publication ?')) return
+    await remove(ref(db, `${basePath}/${postId}`))
   }
 
   return (
@@ -71,6 +76,12 @@ export default function PostFeed({ basePath }) {
               )
             })}
           </div>
+
+          {isAdmin && (
+            <button className="delete-btn" onClick={() => deletePost(post.id)}>
+              🗑️ Supprimer
+            </button>
+          )}
         </div>
       ))}
     </div>

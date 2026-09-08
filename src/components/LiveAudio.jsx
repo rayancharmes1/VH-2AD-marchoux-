@@ -39,12 +39,15 @@ export default function LiveAudio() {
     const res = await fetch(
       `/api/agora-token?channel=${encodeURIComponent(CHANNEL)}&uid=${encodeURIComponent(user.uid)}&role=${role}`
     )
-    if (!res.ok) {
-      throw new Error(
-        "Impossible d'obtenir un token. Le direct ne fonctionne qu'une fois le site déployé sur Vercel (pas en `npm run dev` seul)."
-      )
+    let data = null
+    try {
+      data = await res.json()
+    } catch (e) {
+      // réponse non-JSON (ex: page d'erreur Vercel)
     }
-    const data = await res.json()
+    if (!res.ok) {
+      throw new Error(data?.error || data?.message || `Impossible d'obtenir un token (code ${res.status}).`)
+    }
     return data.token
   }
 

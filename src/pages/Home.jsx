@@ -9,7 +9,7 @@ import Marketplace from '../components/Marketplace'
 import PremiumBadge from '../components/PremiumBadge'
 import MyProfile from './MyProfile'
 
-const TABS = ['Service', 'Informations', 'Infos travail', 'Marché', 'Direct', 'Mon profil', 'Administration']
+const TABS = ['Service', 'Actualités', 'Infos travail', 'Marché', 'Direct', 'Mon profil', 'Administration']
 
 export default function Home() {
   const { profile, isSemiAdmin, isAdmin, isPremium, logout } = useAuth()
@@ -48,10 +48,10 @@ export default function Home() {
       <main className="tab-content">
         {tab === 'Service' && <ServiceDirectory />}
 
-        {tab === 'Informations' && (
+        {tab === 'Actualités' && (
           <div>
             {isSemiAdmin && (
-              <PostComposer basePath="posts/culte" allowedTypes={['texte', 'vocal']} defaultDurationHours={24} />
+              <PostComposer basePath="posts/culte" allowedTypes={['texte', 'vocal', 'image']} defaultDurationHours={24} />
             )}
             <PostFeed basePath="posts/culte" />
           </div>

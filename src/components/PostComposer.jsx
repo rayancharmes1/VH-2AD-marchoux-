@@ -3,8 +3,24 @@ import { push, ref, serverTimestamp, set } from 'firebase/database'
 import { db } from '../firebase'
 import { useAuth } from '../context/AuthContext'
 import { computeExpiresAt } from '../utils/ttl'
+import { fileToResizedBase64 } from '../utils/images'
 
 const MAX_VOCAL_MS = 2 * 60 * 1000 // 2 minutes max
+
+// Safari/iPhone ne supporte pas le format "audio/webm" utilisé par défaut sur
+// Chrome/Android : on détecte le meilleur format supporté par le navigateur,
+// et on l'utilise aussi bien pour l'enregistrement que pour le fichier final,
+// sinon la note vocale semble s'enregistrer mais ne peut être lue nulle part.
+function getSupportedMimeType() {
+  const candidates = [
+    'audio/mp4', // Safari / iPhone
+    'audio/webm;codecs=opus',
+    'audio/webm',
+    'audio/ogg;codecs=opus'
+  ]
+  if (typeof MediaRecorder === 'undefined' || !MediaRecorder.isTypeSupported) return ''
+  return candidates.find((type) => MediaRecorder.isTypeSupported(type)) || ''
+}
 
 function fileToBase64(file) {
   return new Promise((resolve, reject) => {
@@ -30,17 +46,22 @@ export default function PostComposer({ basePath, allowedTypes, defaultDurationHo
   const mediaRecorderRef = useRef(null)
   const chunksRef = useRef([])
   const timeoutRef = useRef(null)
+  const mimeTypeRef = useRef('')
 
   async function startRecording() {
     setError('')
     setAudioBlob(null)
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true })
-      const recorder = new MediaRecorder(stream)
+      const mimeType = getSupportedMimeType()
+      mimeTypeRef.current = mimeType
+      const recorder = mimeType ? new MediaRecorder(stream, { mimeType }) : new MediaRecorder(stream)
       chunksRef.current = []
-      recorder.ondataavailable = (e) => chunksRef.current.push(e.data)
+      recorder.ondataavailable = (e) => {
+        if (e.data && e.data.size > 0) chunksRef.current.push(e.data)
+      }
       recorder.onstop = () => {
-        setAudioBlob(new Blob(chunksRef.current, { type: 'audio/webm' }))
+        setAudioBlob(new Blob(chunksRef.current, { type: mimeTypeRef.current || 'audio/webm' }))
         stream.getTracks().forEach((t) => t.stop())
       }
       recorder.start()
@@ -48,7 +69,7 @@ export default function PostComposer({ basePath, allowedTypes, defaultDurationHo
       setRecording(true)
       timeoutRef.current = setTimeout(() => stopRecording(), MAX_VOCAL_MS)
     } catch (err) {
-      setError("Impossible d'accéder au micro.")
+      setError("Impossible d'accéder au micro (vérifie l'autorisation microphone dans les réglages de ton téléphone).")
     }
   }
 
@@ -83,7 +104,7 @@ export default function PostComposer({ basePath, allowedTypes, defaultDurationHo
         payload.content = await fileToBase64(audioBlob)
       } else if (image && allowedTypes.includes('image')) {
         payload.type = 'image'
-        payload.content = await fileToBase64(image)
+        payload.content = await fileToResizedBase64(image)
         payload.texte = text
       } else {
         payload.type = 'texte'
