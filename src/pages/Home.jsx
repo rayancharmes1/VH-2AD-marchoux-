@@ -5,8 +5,9 @@ import PostFeed from '../components/PostFeed'
 import PostComposer from '../components/PostComposer'
 import LiveAudio from '../components/LiveAudio'
 import AdminPanel from '../components/AdminPanel'
+import MyProfile from './MyProfile'
 
-const TABS = ['Service', 'Informations', 'Infos travail', 'Direct', 'Administration']
+const TABS = ['Service', 'Informations', 'Infos travail', 'Direct', 'Mon profil', 'Administration']
 
 export default function Home() {
   const { profile, isSemiAdmin, isAdmin, logout } = useAuth()
@@ -17,7 +18,10 @@ export default function Home() {
   return (
     <div className="home">
       <header className="topbar">
-        <h1>Vase d'honneur — 2AD Marchoux</h1>
+        <div className="brand">
+          <img src="/logo.png" alt="Vase d'honneur" className="logo" />
+          <h1>Vase d'honneur — 2AD Marchoux</h1>
+        </div>
         <div className="user-chip">
           <span>{profile?.prenom} {profile?.nom} {isAdmin && '(Admin)'} {!isAdmin && isSemiAdmin && '(Semi-admin)'}</span>
           <button onClick={logout}>Déconnexion</button>
@@ -54,6 +58,8 @@ export default function Home() {
         )}
 
         {tab === 'Direct' && <LiveAudio />}
+
+        {tab === 'Mon profil' && <MyProfile />}
 
         {tab === 'Administration' && isAdmin && <AdminPanel />}
       </main>

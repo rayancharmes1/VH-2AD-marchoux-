@@ -52,6 +52,8 @@ export function AuthProvider({ children }) {
       lieuVisible: !!data.lieuVisible,
       service: data.service || '',
       serviceVisible: !!data.serviceVisible,
+      photoPrincipale: data.photoPrincipale || '',
+      photoSecondaire: data.photoSecondaire || '',
       role: 'member', // 'member' | 'semiAdmin' | 'admin'
       badges: {},
       profileComplete: complete,

@@ -35,6 +35,19 @@ export default function LiveAudio() {
     return clientRef.current
   }
 
+  async function fetchToken(role) {
+    const res = await fetch(
+      `/api/agora-token?channel=${encodeURIComponent(CHANNEL)}&uid=${encodeURIComponent(user.uid)}&role=${role}`
+    )
+    if (!res.ok) {
+      throw new Error(
+        "Impossible d'obtenir un token. Le direct ne fonctionne qu'une fois le site déployé sur Vercel (pas en `npm run dev` seul)."
+      )
+    }
+    const data = await res.json()
+    return data.token
+  }
+
   async function startBroadcast() {
     setError('')
     if (!APP_ID) {
@@ -42,9 +55,10 @@ export default function LiveAudio() {
       return
     }
     try {
+      const token = await fetchToken('host')
       const client = getClient()
       await client.setClientRole('host')
-      await client.join(APP_ID, CHANNEL, null, user.uid)
+      await client.join(APP_ID, CHANNEL, token, user.uid)
       localTrackRef.current = await AgoraRTC.createMicrophoneAudioTrack()
       await client.publish([localTrackRef.current])
       await set(ref(db, 'liveSessions/current'), {
@@ -55,7 +69,7 @@ export default function LiveAudio() {
       })
       setConnected(true)
     } catch (err) {
-      setError('Impossible de démarrer le direct.')
+      setError(err.message || 'Impossible de démarrer le direct.')
     }
   }
 
@@ -71,6 +85,7 @@ export default function LiveAudio() {
       return
     }
     try {
+      const token = await fetchToken('audience')
       const client = getClient()
       await client.setClientRole('audience')
       client.on('user-published', async (remoteUser, mediaType) => {
@@ -79,10 +94,10 @@ export default function LiveAudio() {
           remoteUser.audioTrack.play()
         }
       })
-      await client.join(APP_ID, CHANNEL, null, user.uid)
+      await client.join(APP_ID, CHANNEL, token, user.uid)
       setConnected(true)
     } catch (err) {
-      setError("Impossible de rejoindre le direct.")
+      setError(err.message || "Impossible de rejoindre le direct.")
     }
   }
 

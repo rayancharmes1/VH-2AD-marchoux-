@@ -1,11 +1,15 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { fileToResizedBase64 } from '../utils/images'
 
 export default function Register() {
   const { registerWithEmail } = useAuth()
   const navigate = useNavigate()
   const [error, setError] = useState('')
+  const [sending, setSending] = useState(false)
+  const [photo1, setPhoto1] = useState(null)
+  const [photo2, setPhoto2] = useState(null)
   const [form, setForm] = useState({
     nom: '',
     prenom: '',
@@ -32,11 +36,20 @@ export default function Register() {
       setError('Le contact est obligatoire.')
       return
     }
+    if (!photo1) {
+      setError('Ajoute au moins une photo (obligatoire).')
+      return
+    }
+    setSending(true)
     try {
-      await registerWithEmail(form)
+      const photoPrincipale = await fileToResizedBase64(photo1)
+      const photoSecondaire = photo2 ? await fileToResizedBase64(photo2) : ''
+      await registerWithEmail({ ...form, photoPrincipale, photoSecondaire })
       navigate('/')
     } catch (err) {
       setError("Impossible de créer le compte (email déjà utilisé ou mot de passe trop court).")
+    } finally {
+      setSending(false)
     }
   }
 
@@ -51,6 +64,15 @@ export default function Register() {
         <input placeholder="Prénom" value={form.prenom} onChange={(e) => update('prenom', e.target.value)} required />
         <input type="email" placeholder="Email" value={form.email} onChange={(e) => update('email', e.target.value)} required />
         <input type="password" placeholder="Mot de passe" value={form.password} onChange={(e) => update('password', e.target.value)} required minLength={6} />
+
+        <label className="photo-field">
+          Photo de profil (obligatoire)
+          <input type="file" accept="image/*" onChange={(e) => setPhoto1(e.target.files[0] || null)} required />
+        </label>
+        <label className="photo-field">
+          Deuxième photo (facultatif)
+          <input type="file" accept="image/*" onChange={(e) => setPhoto2(e.target.files[0] || null)} />
+        </label>
 
         <input placeholder="Titre / responsabilité dans l'église (facultatif)" value={form.titre} onChange={(e) => update('titre', e.target.value)} />
         <input placeholder="Travail ou expérience (facultatif)" value={form.experience} onChange={(e) => update('experience', e.target.value)} />
@@ -76,7 +98,7 @@ export default function Register() {
           </span>
         </label>
 
-        <button type="submit">Créer mon compte</button>
+        <button type="submit" disabled={sending}>{sending ? 'Création du compte...' : 'Créer mon compte'}</button>
         <p>Déjà inscrit ? <Link to="/connexion">Se connecter</Link></p>
       </form>
     </div>

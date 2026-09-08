@@ -34,6 +34,7 @@ export default function ServiceDirectory() {
       <div className="member-grid">
         {members.map((m) => (
           <div key={m.uid} className="member-card">
+            {m.photoPrincipale && <img src={m.photoPrincipale} alt={`${m.prenom} ${m.nom}`} className="member-avatar" />}
             <h3>{m.prenom} {m.nom}</h3>
             {m.titre && <p className="titre">{m.titre}</p>}
             <p className="service">{m.service}</p>
