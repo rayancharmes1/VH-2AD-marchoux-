@@ -10,6 +10,9 @@
         "role": {
           ".write": "root.child('users').child(auth.uid).child('role').val() === 'admin'"
         },
+        "premium": {
+          ".write": "root.child('users').child(auth.uid).child('role').val() === 'admin'"
+        },
         "badges": {
           ".write": "root.child('users').child(auth.uid).child('role').val() === 'admin' || root.child('users').child(auth.uid).child('role').val() === 'semiAdmin'"
         }
@@ -54,6 +57,13 @@
       ".read": "auth != null",
       "current": {
         ".write": "auth != null && root.child('users').child(auth.uid).child('role').val() === 'admin'"
+      }
+    },
+
+    "marche": {
+      ".read": "auth != null",
+      "$articleId": {
+        ".write": "auth != null && (!data.exists() || data.child('authorUid').val() === auth.uid || root.child('users').child(auth.uid).child('role').val() === 'admin')"
       }
     }
   }

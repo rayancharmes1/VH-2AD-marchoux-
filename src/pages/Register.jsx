@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { fileToResizedBase64 } from '../utils/images'
+import PasswordField from '../components/PasswordField'
 
 export default function Register() {
   const { registerWithEmail } = useAuth()
@@ -63,7 +64,7 @@ export default function Register() {
         <input placeholder="Nom" value={form.nom} onChange={(e) => update('nom', e.target.value)} required />
         <input placeholder="Prénom" value={form.prenom} onChange={(e) => update('prenom', e.target.value)} required />
         <input type="email" placeholder="Email" value={form.email} onChange={(e) => update('email', e.target.value)} required />
-        <input type="password" placeholder="Mot de passe" value={form.password} onChange={(e) => update('password', e.target.value)} required minLength={6} />
+        <PasswordField value={form.password} onChange={(e) => update('password', e.target.value)} required minLength={6} />
 
         <label className="photo-field">
           Photo de profil (obligatoire)

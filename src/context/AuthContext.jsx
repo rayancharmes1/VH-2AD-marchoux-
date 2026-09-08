@@ -117,6 +117,7 @@ export function AuthProvider({ children }) {
     loading,
     isAdmin: profile?.role === 'admin',
     isSemiAdmin: profile?.role === 'semiAdmin' || profile?.role === 'admin',
+    isPremium: !!profile?.premium || profile?.role === 'admin',
     registerWithEmail,
     loginWithEmail,
     loginWithGoogle,

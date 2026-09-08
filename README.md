@@ -85,8 +85,10 @@ git push -u origin main
 - **Annuaire des services** : les membres qui ont choisi d'apparaître y sont listés avec un bouton "Contacter sur WhatsApp" qui ouvre directement une discussion avec leur numéro.
 - **Informations (culte)** : les admins et semi-admins publient du texte ou un vocal (2 min max). Chaque post a une durée de vie (24h par défaut, modifiable) ; une fois expiré, il est automatiquement supprimé de la base de données et de l'application. Chaque membre peut réagir avec un emoji.
 - **Infos travail** : texte et image uniquement, même logique d'expiration (7 jours par défaut, modifiable).
+- **Marché** : chaque membre peut publier des articles à vendre (titre, description, jusqu'à 3 images) — 5 articles gratuits par compte. Au-delà, un bouton propose de passer en Premium (1000 FCFA/mois) via WhatsApp (+225 01 60 67 29 66) ; l'admin active ensuite manuellement le Premium du compte depuis l'onglet Administration, ce qui affiche un badge ⭐ à côté du nom partout dans l'app. Les admins ont le Premium automatiquement.
 - **Direct** : seul un admin peut démarrer un direct audio (via Agora) ; tous les membres inscrits peuvent l'écouter en temps réel.
-- **Administration** (réservé aux admins) : création de badges (une ou deux couleurs), attribution de badges par membre, promotion/rétrogradation entre membre / semi-admin / admin.
+- **Mon profil** : chaque membre peut consulter et modifier ses informations et ses photos à tout moment (onglet accessible aussi en cliquant sur son nom en haut de l'écran).
+- **Administration** (réservé aux admins) : création de badges (une ou deux couleurs), attribution de badges par membre, promotion/rétrogradation entre membre / semi-admin / admin, activation du Premium.
 
 ## Notes techniques importantes
 

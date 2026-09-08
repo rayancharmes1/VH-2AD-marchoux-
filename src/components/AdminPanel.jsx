@@ -30,6 +30,10 @@ export default function AdminPanel() {
     await set(ref(db, `users/${uid}/role`), role)
   }
 
+  async function togglePremium(uid, current) {
+    await set(ref(db, `users/${uid}/premium`), !current)
+  }
+
   async function createBadge(e) {
     e.preventDefault()
     if (!badgeName) return
@@ -45,6 +49,15 @@ export default function AdminPanel() {
     } else {
       await set(ref(db, `users/${uid}/badges/${badgeId}`), true)
     }
+  }
+
+  async function deleteMember(uid, nomComplet) {
+    const ok = window.confirm(
+      `Supprimer définitivement la fiche de ${nomComplet} de la base de données ?\n\n` +
+      `⚠️ Si son compte existe encore dans Firebase Authentication, supprime-le aussi là-bas (Authentication > Users), sinon la personne pourra se reconnecter et une fiche vide sera recréée.`
+    )
+    if (!ok) return
+    await remove(ref(db, `users/${uid}`))
   }
 
   return (
@@ -73,7 +86,9 @@ export default function AdminPanel() {
             <tr>
               <th>Nom</th>
               <th>Rôle</th>
+              <th>Premium</th>
               <th>Badges</th>
+              <th></th>
             </tr>
           </thead>
           <tbody>
@@ -88,6 +103,17 @@ export default function AdminPanel() {
                   </select>
                 </td>
                 <td>
+                  <label className="badge-checkbox">
+                    <input
+                      type="checkbox"
+                      checked={!!u.premium || u.role === 'admin'}
+                      disabled={u.role === 'admin'}
+                      onChange={() => togglePremium(u.uid, !!u.premium)}
+                    />
+                    ⭐
+                  </label>
+                </td>
+                <td>
                   {Object.entries(badges).map(([id, b]) => {
                     const has = !!u.badges?.[id]
                     return (
@@ -97,6 +123,11 @@ export default function AdminPanel() {
                       </label>
                     )
                   })}
+                </td>
+                <td>
+                  <button className="delete-btn" onClick={() => deleteMember(u.uid, `${u.prenom} ${u.nom}`)}>
+                    Supprimer
+                  </button>
                 </td>
               </tr>
             ))}

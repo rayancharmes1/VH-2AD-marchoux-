@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import PasswordField from '../components/PasswordField'
 
 export default function Login() {
   const { loginWithEmail, loginWithGoogle } = useAuth()
@@ -37,7 +38,7 @@ export default function Login() {
         <h2>Connexion</h2>
         {error && <p className="error">{error}</p>}
         <input type="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
-        <input type="password" placeholder="Mot de passe" value={password} onChange={(e) => setPassword(e.target.value)} required />
+        <PasswordField value={password} onChange={(e) => setPassword(e.target.value)} required />
         <button type="submit">Se connecter</button>
         <button type="button" className="google-btn" onClick={handleGoogle}>Continuer avec Google</button>
         <p>Pas encore de compte ? <Link to="/inscription">S'inscrire</Link></p>

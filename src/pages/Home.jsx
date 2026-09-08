@@ -5,12 +5,14 @@ import PostFeed from '../components/PostFeed'
 import PostComposer from '../components/PostComposer'
 import LiveAudio from '../components/LiveAudio'
 import AdminPanel from '../components/AdminPanel'
+import Marketplace from '../components/Marketplace'
+import PremiumBadge from '../components/PremiumBadge'
 import MyProfile from './MyProfile'
 
-const TABS = ['Service', 'Informations', 'Infos travail', 'Direct', 'Mon profil', 'Administration']
+const TABS = ['Service', 'Informations', 'Infos travail', 'Marché', 'Direct', 'Mon profil', 'Administration']
 
 export default function Home() {
-  const { profile, isSemiAdmin, isAdmin, logout } = useAuth()
+  const { profile, isSemiAdmin, isAdmin, isPremium, logout } = useAuth()
   const [tab, setTab] = useState('Service')
 
   const visibleTabs = TABS.filter((t) => t !== 'Administration' || isAdmin)
@@ -23,8 +25,15 @@ export default function Home() {
           <h1>Vase d'honneur — 2AD Marchoux</h1>
         </div>
         <div className="user-chip">
-          <span>{profile?.prenom} {profile?.nom} {isAdmin && '(Admin)'} {!isAdmin && isSemiAdmin && '(Semi-admin)'}</span>
-          <button onClick={logout}>Déconnexion</button>
+          <button className="user-mini" onClick={() => setTab('Mon profil')} title="Voir mon profil">
+            {profile?.photoPrincipale && <img src={profile.photoPrincipale} alt="" className="user-mini-avatar" />}
+            <span>
+              {profile?.prenom} {profile?.nom}
+              {isAdmin && ' (Admin)'} {!isAdmin && isSemiAdmin && ' (Semi-admin)'}
+              <PremiumBadge show={isPremium} />
+            </span>
+          </button>
+          <button className="logout-btn" onClick={logout}>Déconnexion</button>
         </div>
       </header>
 
@@ -56,6 +65,8 @@ export default function Home() {
             <PostFeed basePath="posts/travail" />
           </div>
         )}
+
+        {tab === 'Marché' && <Marketplace />}
 
         {tab === 'Direct' && <LiveAudio />}
 

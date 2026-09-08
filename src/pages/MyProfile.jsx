@@ -3,6 +3,7 @@ import { ref, set } from 'firebase/database'
 import { db } from '../firebase'
 import { useAuth } from '../context/AuthContext'
 import { fileToResizedBase64 } from '../utils/images'
+import PremiumBadge from '../components/PremiumBadge'
 
 export default function MyProfile() {
   const { user, profile } = useAuth()
@@ -49,6 +50,8 @@ export default function MyProfile() {
 
   if (!profile) return null
 
+  const premium = !!profile.premium || profile.role === 'admin'
+
   return (
     <div className="my-profile">
       <h2>Mon profil</h2>
@@ -56,6 +59,7 @@ export default function MyProfile() {
         {profile.photoPrincipale && <img src={profile.photoPrincipale} alt="Ma photo" className="profile-avatar" />}
         <p><strong>{profile.prenom} {profile.nom}</strong></p>
         <p className="muted">{profile.email}</p>
+        <PremiumBadge show={premium} canRequest={!premium} name={`${profile.prenom} ${profile.nom}`} />
       </div>
 
       <form onSubmit={handleSubmit} className="auth-form profile-form">
