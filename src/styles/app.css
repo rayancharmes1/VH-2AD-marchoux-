@@ -1,0 +1,218 @@
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  background: #f5f3fa;
+  color: #2b2340;
+}
+
+.auth-page {
+  max-width: 420px;
+  margin: 60px auto;
+  padding: 24px;
+  text-align: center;
+}
+
+.auth-form {
+  background: white;
+  padding: 24px;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+}
+
+.auth-form input, .auth-form textarea, .auth-form select {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.auth-form button {
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background: #6b46c1;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.auth-form .google-btn {
+  background: white;
+  color: #333;
+  border: 1px solid #ccc;
+}
+
+.field-with-toggle {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.field-with-toggle span {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.error { color: #c0392b; font-size: 13px; }
+
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 24px;
+  background: #6b46c1;
+  color: white;
+}
+
+.user-chip {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.user-chip button {
+  background: rgba(255,255,255,0.2);
+  border: none;
+  color: white;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.tabs {
+  display: flex;
+  gap: 8px;
+  padding: 12px 24px;
+  background: white;
+  overflow-x: auto;
+}
+.tab {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 20px;
+  background: #ece6f7;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tab.active {
+  background: #6b46c1;
+  color: white;
+}
+
+.tab-content {
+  padding: 20px 24px;
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+.member-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 14px;
+}
+.member-card {
+  background: white;
+  border-radius: 12px;
+  padding: 14px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.member-card .titre { font-size: 13px; color: #6b46c1; }
+.member-card .service { font-weight: 600; }
+.contact-btn {
+  display: inline-block;
+  margin-top: 8px;
+  padding: 6px 12px;
+  background: #25D366;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 13px;
+}
+
+.badge-pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 12px;
+  color: white;
+  font-size: 11px;
+  margin-right: 4px;
+}
+
+.post-composer {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.post-composer textarea {
+  min-height: 70px;
+  padding: 10px;
+  border-radius: 8px;
+  border: 1px solid #ddd;
+}
+.post-composer button {
+  align-self: flex-start;
+  background: #6b46c1;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.post-card {
+  background: white;
+  border-radius: 12px;
+  padding: 14px;
+  margin-bottom: 12px;
+}
+.post-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 6px;
+}
+.post-image { max-width: 100%; border-radius: 8px; margin: 8px 0; }
+
+.reactions { display: flex; gap: 6px; margin-top: 8px; }
+.reaction {
+  border: 1px solid #ddd;
+  background: white;
+  border-radius: 16px;
+  padding: 4px 10px;
+  cursor: pointer;
+}
+.reaction.active { background: #ece6f7; border-color: #6b46c1; }
+
+.live-audio { text-align: center; padding: 30px; }
+.live-audio button {
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  background: #6b46c1;
+  color: white;
+  cursor: pointer;
+  margin: 8px;
+}
+
+.admin-panel section {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 16px;
+}
+.badge-form { display: flex; gap: 8px; align-items: center; }
+.admin-table { width: 100%; border-collapse: collapse; }
+.admin-table th, .admin-table td { text-align: left; padding: 8px; border-bottom: 1px solid #eee; font-size: 13px; }
+.badge-checkbox { display: inline-flex; align-items: center; gap: 4px; margin-right: 10px; font-size: 12px; }
+
+.loading { text-align: center; margin-top: 80px; }
