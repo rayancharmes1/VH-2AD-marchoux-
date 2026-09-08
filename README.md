@@ -15,10 +15,12 @@ Stack : **React (Vite) + Firebase (Auth + Realtime Database) + Agora (direct aud
 ## 2. Créer le compte Agora (pour le direct audio)
 
 1. Crée un compte gratuit sur https://console.agora.io
-2. Crée un projet, en mode "APP ID authentication" (sans certificat, plus simple pour démarrer).
-3. Copie l'**App ID**.
+2. Crée un projet. Si tu as activé le **certificat** (sécurité renforcée), garde-le — c'est ce que fait ce projet : les tokens sont générés par une petite fonction serveur (`api/agora-token.js`), le certificat n'est jamais exposé au navigateur.
+3. Copie l'**App ID** et le **App Certificate** (Project Management > ton projet > "Enable" à côté du certificat pour le révéler).
 
-> ⚠️ Sans certificat/token, n'importe qui connaissant l'App ID pourrait techniquement rejoindre le canal audio. Pour une sécurité renforcée plus tard, il faudra ajouter un petit serveur de génération de tokens (Agora fournit des exemples prêts à l'emploi).
+> ⚠️ Le certificat est un secret : il va uniquement dans la variable `AGORA_APP_CERTIFICATE` (sans préfixe `VITE_`), jamais dans le code, jamais partagé.
+
+> ℹ️ La fonction `/api/agora-token.js` ne fonctionne pas avec `npm run dev` seul (Vite ne sait pas exécuter les fonctions serverless) — le bouton "Direct" ne marchera qu'une fois le site déployé sur Vercel (ou en lançant `vercel dev` en local si tu as installé la CLI Vercel).
 
 ## 3. Configurer les variables d'environnement
 
@@ -73,6 +75,7 @@ git push -u origin main
    - VITE_FIREBASE_MESSAGING_SENDER_ID
    - VITE_FIREBASE_APP_ID
    - VITE_AGORA_APP_ID
+   - AGORA_APP_CERTIFICATE (coche "Sensitive" si Vercel le propose)
 4. Clique "Deploy".
 5. Dans Firebase Console → Authentication → Settings → "Domaines autorisés", ajoute le domaine `*.vercel.app` (ou ton domaine final) sinon la connexion Google sera refusée.
 
